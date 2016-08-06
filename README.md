@@ -1,0 +1,5 @@
+Ecobar
+---
+Ecobee BitBar Plugin
+
+
