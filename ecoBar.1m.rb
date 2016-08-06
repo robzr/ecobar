@@ -19,7 +19,7 @@ require 'ecobee'
 #require_relative '/Users/robzr/GitHub/ecobee/lib/ecobee/token.rb'
 #require_relative '/Users/robzr/GitHub/ecobee/lib/ecobee/register.rb'
 
-API_KEY = 'u2Krw0OumeliB0OnwiaogySvgExhy2K4'
+API_KEY = 'MKDvfwwyGib0ZFhUdgKP4wDIRzYooM1o'
 HVAC_MODES = ['auto', 'auxHeatOnly', 'cool', 'heat', 'off', 'quit']
 DEG = '°'
 
