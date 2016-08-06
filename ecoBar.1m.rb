@@ -182,10 +182,10 @@ end
 token = Ecobee::Token.new(
   app_key: API_KEY, app_name: API_KEY,
   scope: :smartWrite,
-  token_file: '~/.ecobee_token'
+  token_file: '~/.ecoBar'
 )
 if token.pin
-  puts "Ecobee | color=red"
+  puts "ecoBar | color=red"
   puts "---"
   puts "Registration Needed | color=red"
   puts "---"
