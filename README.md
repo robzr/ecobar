@@ -1,8 +1,10 @@
 Ecobar
 ---
-Ecobee BitBar Plugin
+Ecobee BitBar Plugin for monitoring and controlling an Ecobee thermostat.
 
-<img src="https://raw.githubusercontent.com/robzr/ecobar/master/screenshot.png" 
+<img src="
+https://raw.githubusercontent.com/robzr/ecobar/master/screenshot.png
+https://raw.githubusercontent.com/robzr/ecobar/master/screenshot.png" 
   alt="Example output from one line bot" width=321 height=419>
 
 Requires:
