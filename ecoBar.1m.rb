@@ -13,14 +13,10 @@
 # <bitbar.abouturl>http://github.com/robzr/ecobee</bitbar.abouturl>
 
 require 'pp'
-require 'ecobee'
-#require_relative '/Users/robzr/GitHub/ecobee/lib/ecobee.rb'
-#require_relative '/Users/robzr/GitHub/ecobee/lib/ecobee/client.rb'
-#require_relative '/Users/robzr/GitHub/ecobee/lib/ecobee/token.rb'
-#require_relative '/Users/robzr/GitHub/ecobee/lib/ecobee/register.rb'
+#require 'ecobee'
+require_relative '/Users/robzr/GitHub/ecobee/lib/ecobee.rb'
 
-API_KEY = 'MKDvfwwyGib0ZFhUdgKP4wDIRzYooM1o'
-HVAC_MODES = ['auto', 'auxHeatOnly', 'cool', 'heat', 'off', 'quit']
+APP_KEY = 'MKDvfwwyGib0ZFhUdgKP4wDIRzYooM1o'
 DEG = '°'
 
 module Ecobee
@@ -33,13 +29,8 @@ module Ecobee
 
     def get_thermostat(args = {})
       index = args.delete(:index) || 0
-      http_response = @client.get('thermostat', 
-                                  Ecobee::Selection(args))
-      response = JSON.parse(http_response.body)
-      get_thermostat_list_index(index: index,
-                                response: validate_status(response))
-    rescue JSON::ParserError => msg
-      raise ResponseError.new("JSON::ParserError => #{msg}")
+      response = @client.get('thermostat', Ecobee::Selection(args))
+      get_thermostat_list_index(index: index, response: response)
     end
 
     def get_thermostat_list_index(index: 0, response: nil)
@@ -55,21 +46,6 @@ module Ecobee
       end
     end
 
-    def validate_status(response)
-      if !response.key? 'status'
-        raise ResponseError.new('Missing Status') 
-      elsif !response['status'].key? 'code'
-        raise ResponseError.new('Missing Status Code') 
-      elsif response['status']['code'] != 0
-        raise ResponseError.new(
-          "GET Error: #{response['status']['code']} " +
-          "Message: #{response['status']['message']}"
-        )
-      else
-        response
-      end
-    end
-
 #      puts "Heat: #{info['runtime']['desiredHeat'] / 10}#{DEG} | color=red"
 
     def set_hold(cool_hold: nil, heat_hold: nil)
@@ -81,7 +57,7 @@ module Ecobee
       }]
       functions[0]['params']['coolHoldTemp'] = cool_hold
       functions[0]['params']['heatHoldTemp'] = heat_hold
-      http_response = @client.post(
+      @client.post(
         'thermostat', 
         body: { 
           'selection' => {
@@ -91,11 +67,10 @@ module Ecobee
           'functions' => functions
         }
       )
-      response = JSON.parse(http_response.body)
     end
 
     def update_mode(mode)
-      http_response = @client.post(
+      @client.post(
         'thermostat', 
         body: { 
           'selection' => {
@@ -109,7 +84,6 @@ module Ecobee
           }
         }
       )
-      response = JSON.parse(http_response.body)
     end
   end
 end
@@ -180,9 +154,8 @@ def website
 end
 
 token = Ecobee::Token.new(
-  app_key: API_KEY, app_name: API_KEY,
+  app_key: APP_KEY,
   scope: :smartWrite,
-  token_file: '~/.ecoBar'
 )
 if token.pin
   puts "ecoBar | color=red"
