@@ -3,14 +3,14 @@
 # Allows for display and control of your Ecobee in the Mac OS X 
 # menubar, using BitBar (http://getbitbar.com).   -- @robzr
 #
-# <bitbar.title>EcobeeStat</bitbar.title>
+# <bitbar.title>ecoBar</bitbar.title>
 # <bitbar.version>v1.0</bitbar.version>
 # <bitbar.author>Rob Zwissler</bitbar.author>
 # <bitbar.author.github>robzr</bitbar.author.github>
 # <bitbar.desc>Ecobee Thermostat Control</bitbar.desc>
 # <bitbar.image>http://github.com/robzr/ecobee</bitbar.image>
 # <bitbar.dependencies>ruby</bitbar.dependencies>
-# <bitbar.abouturl>http://github.com/robzr/ecobee</bitbar.abouturl>
+# <bitbar.abouturl>http://github.com/robzr/ecobar</bitbar.abouturl>
 
 require 'pp'
 #require 'ecobee'
