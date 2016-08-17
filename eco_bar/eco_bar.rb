@@ -1,7 +1,6 @@
 require_relative 'eco_bar/bar_io.rb'
 require_relative 'eco_bar/icons.rb'
-
-require 'ecobee'
+require_relative 'eco_bar/version.rb'
 
 module EcoBar
   APP_KEY = 'MKDvfwwyGib0ZFhUdgKP4wDIRzYooM1o'

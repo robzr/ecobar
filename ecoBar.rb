@@ -12,9 +12,7 @@
 # <bitbar.abouturl>http://github.com/robzr/ecobar</bitbar.abouturl>
 
 require 'pp'
-require 'ecobee'
-
-#require_relative '../ecobee/lib/ecobee'
+require_relative 'ecobee/ecobee'
 require_relative 'eco_bar/eco_bar'
 
 @config = { 'index' => 0 }
@@ -54,13 +52,13 @@ ecobar = EcoBar::BarIO.new(index: @config['index'],
 
 case arg = ARGV.shift 
 when /^dump/
-#  pp ecobar.thermostat
-  pp(ecobar.thermostat[:events]
-       .select do |event|
-         event[:running] == true
-       end[0])
-
-
+  pp ecobar.thermostat
+#  pp(ecobar.thermostat[:events]
+#       .select do |event|
+#         event[:running] == true
+#       end[0])
+when /^wipe_tokens/
+  `rm -f ~'/Library/Mobile Documents/com~apple~CloudDocs/.ecobee_token' ~'/.ecobee_token'`
 when /^set_index=/
   @config['index'] = [arg.sub(/^.*=/, '').to_i, ecobar.max_index].min.to_i
   @token.config_save

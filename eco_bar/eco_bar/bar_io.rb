@@ -159,12 +159,12 @@ module EcoBar
 
     def load_thermostats
       @client ||= Ecobee::Client.new(token: @token)
-      thermostats = [Ecobee::Thermostat.new(client: @client, fake_max_index: 1)]
-      thermostats << Ecobee::Thermostat.new(client: @client, fake_index: 1, fake_max_index: 1)
-#      thermostats = [Ecobee::Thermostat.new(client: @client)]
-#     (1..thermostats[0].max_index).each do |index|
-#         thermostats[index] = Ecobee::Thermostat.new(client: @client, index: index)
-#     end
+#      thermostats = [Ecobee::Thermostat.new(client: @client, fake_max_index: 1)]
+#      thermostats << Ecobee::Thermostat.new(client: @client, fake_index: 1, fake_max_index: 1)
+      thermostats = [Ecobee::Thermostat.new(client: @client)]
+      (1..thermostats[0].max_index).each do |index|
+        thermostats[index] = Ecobee::Thermostat.new(client: @client, index: index)
+      end
       thermostats
     end
   end
