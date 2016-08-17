@@ -84,9 +84,9 @@ module EcoBar
     def color(type)
       'color=' + case type
                  when :hot
-                   dark_mode ? '#f04040': '#c00000'
+                   dark_mode ? '#ff1010': '#c00000'
                  when :cold
-                   dark_mode ? '#4040f0' : '#0000c0'
+                   dark_mode ? '#1010ff' : '#0000c0'
                  when :dark
                    dark_mode ? '#ffffff' : '#000000'
                  when :light
@@ -122,8 +122,8 @@ module EcoBar
             line = "--#{CHECK} #{thermostat.name} (#{thermostat.model})| " +
                    "trim=false #{color(:dark)}"
           else
-            line = "--    #{thermostat.name} (#{thermostat.model})| " +
-                   "#{color(:dark)} #{@base_command} param1=set_index=#{index}"
+            line = "--    #{thermostat.name} (#{thermostat.model})| trim=false" +
+                   " #{color(:dark)} #{@base_command} param1=set_index=#{index}"
           end
           puts line
         end
@@ -159,12 +159,12 @@ module EcoBar
 
     def load_thermostats
       @client ||= Ecobee::Client.new(token: @token)
-#      thermostats = [Ecobee::Thermostat.new(client: @client, fake_max_index: 1)]
-#      thermostats << Ecobee::Thermostat.new(client: @client, fake_index: 1, fake_max_index: 1)
-      thermostats = [Ecobee::Thermostat.new(client: @client)]
-      (1..thermostats[0].max_index).each do |index|
-          thermostats[index] = Ecobee::Thermostat.new(client: @client, index: index)
-      end
+      thermostats = [Ecobee::Thermostat.new(client: @client, fake_max_index: 1)]
+      thermostats << Ecobee::Thermostat.new(client: @client, fake_index: 1, fake_max_index: 1)
+#      thermostats = [Ecobee::Thermostat.new(client: @client)]
+#     (1..thermostats[0].max_index).each do |index|
+#         thermostats[index] = Ecobee::Thermostat.new(client: @client, index: index)
+#     end
       thermostats
     end
   end

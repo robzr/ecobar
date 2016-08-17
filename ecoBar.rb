@@ -12,7 +12,9 @@
 # <bitbar.abouturl>http://github.com/robzr/ecobar</bitbar.abouturl>
 
 require 'pp'
-require_relative '../ecobee/lib/ecobee'
+require 'ecobee'
+
+#require_relative '../ecobee/lib/ecobee'
 require_relative 'eco_bar/eco_bar'
 
 @config = { 'index' => 0 }
