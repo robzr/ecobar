@@ -1,14 +1,12 @@
 #!/usr/bin/env ruby
-# # Allows for display and control of your Ecobee in the Mac OS X 
-# menubar, using BitBar (http://getbitbar.com).   -- @robzr
 #
 # <bitbar.title>ecoBar</bitbar.title>
-# <bitbar.version>v1.0</bitbar.version>
+# <bitbar.version>v0.1.0</bitbar.version>
 # <bitbar.author>Rob Zwissler</bitbar.author>
 # <bitbar.author.github>robzr</bitbar.author.github>
 # <bitbar.desc>Ecobee Thermostat Control</bitbar.desc>
-# <bitbar.image>http://github.com/robzr/ecobee</bitbar.image>
-# <bitbar.dependencies>ruby</bitbar.dependencies>
+# <bitbar.image>https://raw.githubusercontent.com/robzr/ecobar/master/images/screenshot.png</bitbar.image>
+# <bitbar.dependencies>Ruby</bitbar.dependencies>
 # <bitbar.abouturl>http://github.com/robzr/ecobar</bitbar.abouturl>
 
 require 'pp'
@@ -44,6 +42,7 @@ if @token.pin
   # TODO: Add hook for watcher script
   puts 'Login to Ecobee | href=\'https://www.ecobee.com/home/ecobeeLogin.jsp\''
   puts "Add Application with code #{@token.pin} | href=\'https://www.ecobee.com/consumerportal/index.html#/my-apps/add/new\'"
+  puts 'Wait a few minutes'
   exit
 end
 
@@ -58,7 +57,10 @@ when /^dump/
 #         event[:running] == true
 #       end[0])
 when /^wipe_tokens/
-  `rm -f ~'/Library/Mobile Documents/com~apple~CloudDocs/.ecobee_token' ~'/.ecobee_token'`
+  begin
+    File.unlink(*Ecobee::DEFAULT_FILES.map { |tf| File.expand_path tf }) 
+  rescue
+  end
 when /^set_index=/
   @config['index'] = [arg.sub(/^.*=/, '').to_i, ecobar.max_index].min.to_i
   @token.config_save
