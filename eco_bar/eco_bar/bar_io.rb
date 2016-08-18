@@ -13,7 +13,7 @@ module EcoBar
       @token = token
       @thermostats = thermostats || load_thermostats
       @index = [index, max_index].min
-      @base_command = %Q{bash="#{$0}" refresh=true terminal=false}
+      @base_command = %Q{bash="#{$0}" refresh=true terminal=true}
     end
 
     def about
@@ -101,9 +101,9 @@ module EcoBar
         .each do |sensor|
           line = "--#{sensor[:name]}:"
           val = sensor[:capability].select { |cap| cap[:type] == 'temperature' }
-          line += %Q{ #{val[0][:value].to_i / 10.0}#{DEG}} if val.length > 0
+          line += %Q{ #{thermostat.unitize(val[0][:value])}#{DEG}} if val.length > 0
           val = sensor[:capability].select { |cap| cap[:type] == 'humidity' }
-          line += %Q{ #{val[0][:value].to_i }%} if val.length > 0
+          line += %Q{ #{val[0][:value].to_i}%} if val.length > 0
           puts line + "| #{color(:dark)}"
         end
     end

@@ -10,7 +10,13 @@
 # <bitbar.abouturl>http://github.com/robzr/ecobar</bitbar.abouturl>
 
 require 'pp'
-require_relative 'ecobee/ecobee'
+['ecobee/ecobee', '../ecobee/lib/ecobee'].each do |gem|
+  begin
+    require_relative gem
+  break
+    rescue LoadError
+  end
+end
 require_relative 'eco_bar/eco_bar'
 
 @config = { 'index' => 0 }
@@ -39,10 +45,10 @@ if @token.pin
   puts '---'
   puts 'Registration Needed | color=red'
   puts '---'
-  # TODO: Add hook for watcher script
+  # TODO: Add hook for watcher script, use pbcopy, open, etc...
   puts 'Login to Ecobee | href=\'https://www.ecobee.com/home/ecobeeLogin.jsp\''
   puts "Add Application with code #{@token.pin} | href=\'https://www.ecobee.com/consumerportal/index.html#/my-apps/add/new\'"
-  puts 'Wait a few minutes'
+  puts 'Patiently wait a few minutes'
   exit
 end
 
@@ -51,7 +57,13 @@ ecobar = EcoBar::BarIO.new(index: @config['index'],
 
 case arg = ARGV.shift 
 when /^dump/
-  pp ecobar.thermostat
+  if ecobar.thermostat.celsius?
+    puts "Celsius"
+  else
+    puts "Farenheit"
+  end
+  exit
+  puts ecobar.thermostat.dump
 #  pp(ecobar.thermostat[:events]
 #       .select do |event|
 #         event[:running] == true
