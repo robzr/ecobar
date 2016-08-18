@@ -20,7 +20,8 @@ Install as a BitBar Plugin (Advanced):
 - Download and install [BitBar](http://getbitbar.com)
 - Install the [Ecobee Gem](https://rubygems.org/gems/ecobee) by running `gem install ecobee`
 - Place the file `ecoBar.rb` in your BitBar plugin directory (typically `~/Documents/BitBar`)
-- Rename the plugin to something like `ecobar.1m.rb` for a 1 minute refresh rate. (See [BitBar documentation](https://github.com/matryer/bitbar/blob/master/README.md) for details on customizing BitBar plugins)
+- Rename the plugin to something like `ecobar.1m.rb` for a 1 minute refresh rate.
+- See [BitBar documentation](https://github.com/matryer/bitbar/blob/master/README.md) for details on customizing BitBar plugins
 
 TODO:
 - Update registration process for instant refresh
