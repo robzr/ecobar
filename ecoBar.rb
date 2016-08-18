@@ -81,4 +81,6 @@ else
   ecobar.sensors
   ecobar.separator
   ecobar.website
+  ecobar.separator
+  ecobar.about
 end
