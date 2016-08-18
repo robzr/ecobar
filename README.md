@@ -11,10 +11,10 @@ Features:
 - Allows control of temperature setpoints, fan mode, thermostat mode, readout of sensors
 - Has update notification for new versions of ecoBar
 
-Easy Install:
+Standalone Install (Simple):
 - Download the [installer image](https://github.com/robzr/ecobar/blob/master/ecoBar.dmg?raw=true) and run it.
 
-BitBar Plugin (Advanced):
+Install as a BitBar Plugin (Advanced):
 - Download and install [BitBar](http://getbitbar.com)
 - Install the [Ecobee Gem](https://rubygems.org/gems/ecobee) by running:
 ```
