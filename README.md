@@ -12,7 +12,7 @@ Features:
 - Has update notification for new versions of ecoBar
 
 Easy Install:
-- Download [the installer image] and run it.
+- Download the [installer image](https://github.com/robzr/ecobar/blob/master/ecoBar.dmg?raw=true) and run it.
 
 BitBar Plugin (Advanced):
 - Download and install [BitBar](http://getbitbar.com)
