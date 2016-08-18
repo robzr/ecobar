@@ -9,6 +9,8 @@ Features:
 - Runs in macOS menu bar, works in regular mode and dark mode
 - Works with one or more Ecobee thermostats including the excellent ecobee3
 - Allows control of temperature setpoints, fan mode, thermostat mode, readout of sensors
+- Sync's Ecobee API token and settings via iCloud Drive if available
+- Works with Farenheit or Celcius based on Ecobee setting
 - Has update notification for new versions of ecoBar
 
 Standalone Install (Simple):
