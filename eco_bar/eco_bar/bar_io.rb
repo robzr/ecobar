@@ -13,7 +13,7 @@ module EcoBar
       @token = token
       @thermostats = thermostats || load_thermostats
       @index = [index, max_index].min
-      @base_command = %Q{bash="#{$0}" refresh=true terminal=true}
+      @base_command = %Q{bash="#{$0}" refresh=true terminal=false}
     end
 
     def about
