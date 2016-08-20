@@ -13,8 +13,8 @@ require 'pp'
 ['ecobee/ecobee', '../ecobee/lib/ecobee'].each do |gem|
   begin
     require_relative gem
-  break
-    rescue LoadError
+    break
+  rescue LoadError
   end
 end
 require_relative 'eco_bar/eco_bar'

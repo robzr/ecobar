@@ -2,9 +2,13 @@ module EcoBar
   require 'open-uri'
 
   class AutoUpdate
+    attr_reader :local_version, :remote_version
+
     def initialize
       if remote_version = get_remote_version
         @remote_version = Gem::Version.new(remote_version)
+      else
+        @remote_version = nil
       end
       @local_version = Gem::Version.new(EcoBar::DMG_VERSION)
     end

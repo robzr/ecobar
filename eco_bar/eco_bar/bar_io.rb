@@ -16,7 +16,8 @@ module EcoBar
 
     def about
       puts "ecoBar v#{EcoBar::VERSION} | #{color(:dark)} href=#{EcoBar::HOMEPAGE}"
-      unless EcoBar::AutoUpdate.new.up_to_date?
+      auto_update = EcoBar::AutoUpdate.new
+      unless auto_update.up_to_date?
         puts "Update Available | #{color(:hot)} #{@base_command}  param1=update"
       end
     end
