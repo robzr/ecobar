@@ -1,4 +1,4 @@
 module EcoBar
-  VERSION     = '0.2.0'
-  DMG_VERSION = '0.2.0'
+  VERSION     = '0.1.6'
+  DMG_VERSION = '0.1.6'
 end
