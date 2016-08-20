@@ -19,6 +19,23 @@ require 'pp'
 end
 require_relative 'eco_bar/eco_bar'
 
+case arg = ARGV.shift 
+when /^wipe_tokens/
+  begin
+    File.unlink(*Ecobee::DEFAULT_FILES.map { |tf| File.expand_path tf }) 
+  rescue
+  end
+  abort "Wiped token files"
+when /^update/
+  auto_update = EcoBar::AutoUpdate.new
+  if arg =~ /=force/ || !auto_update.up_to_date?
+    auto_update.update!
+  else
+    puts "ecoBar is already up to date."
+  end
+  abort
+end
+
 @config = { 'index' => 0 }
 
 config_load = lambda do |config|
@@ -37,25 +54,29 @@ end
     load: config_load,
     save: config_save,
   },
+  log_file: (File.exist?('/tmp/enable_ecobar_logging') ? '/tmp/ecobar.log' : nil),
   scope: :smartWrite
 )
 
 if @token.pin
+  ecobar = EcoBar::BarIO.new(thermostats: [])
   puts "|dropdown=false templateImage=#{EcoBar::Icons::MENU_30}"
   puts '---'
-  puts 'Registration Needed | color=red'
+  puts "Registration Needed | #{ecobar.color(:hot)}"
   puts '---'
   # TODO: Add hook for watcher script, use pbcopy, open, etc...
   puts 'Login to Ecobee | href=\'https://www.ecobee.com/home/ecobeeLogin.jsp\''
-  puts "Add Application with code #{@token.pin} | href=\'https://www.ecobee.com/consumerportal/index.html#/my-apps/add/new\'"
+  puts("Add Application with code #{@token.pin} | href=" +
+       '\'https://www.ecobee.com/consumerportal/index.html#/my-apps/add/new\'')
   puts 'Patiently wait a few minutes'
+  ecobar.separator
+  ecobar.about
   exit
 end
 
-ecobar = EcoBar::BarIO.new(index: @config['index'],
-                           token: @token)
+ecobar = EcoBar::BarIO.new(index: @config['index'], token: @token)
 
-case arg = ARGV.shift 
+case arg
 when /^dump/
   if ecobar.thermostat.celsius?
     puts "Celsius"
@@ -68,11 +89,6 @@ when /^dump/
 #       .select do |event|
 #         event[:running] == true
 #       end[0])
-when /^wipe_tokens/
-  begin
-    File.unlink(*Ecobee::DEFAULT_FILES.map { |tf| File.expand_path tf }) 
-  rescue
-  end
 when /^set_index=/
   @config['index'] = [arg.sub(/^.*=/, '').to_i, ecobar.max_index].min.to_i
   @token.config_save
