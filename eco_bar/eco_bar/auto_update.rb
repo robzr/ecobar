@@ -32,7 +32,6 @@ module EcoBar
 
     def kill_ecobar
       binary = '/Applications/ecoBar.app/Contents/MacOS/BitBarDistro'
-      binary = '/Applications/BitBar.app/Contents/MacOS/BitBar'
       pids = `fuser "#{binary}" 2>&1`.split(/:\s+/)
       return unless pids.length > 1
       pids = pids[1].split(/\s+/)
