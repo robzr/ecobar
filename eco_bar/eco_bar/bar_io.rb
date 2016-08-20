@@ -4,12 +4,10 @@ module EcoBar
     attr_reader :max_index, :thermostats
 
     def initialize(
-      client: nil,
       index: 0,
       thermostats: nil,
       token: nil
     )
-      @client = client
       @token = token
       @thermostats = thermostats || load_thermostats
       @index = [index, max_index].min
@@ -19,7 +17,7 @@ module EcoBar
     def about
       puts "ecoBar v#{EcoBar::VERSION} | #{color(:dark)} href=#{EcoBar::HOMEPAGE}"
       unless EcoBar::AutoUpdate.new.up_to_date?
-        puts "Update Available | #{color(:hot)} href=#{EcoBar::DMG_URL}"
+        puts "Update Available | #{color(:hot)} #{@base_command}  param1=update"
       end
     end
 
@@ -60,7 +58,7 @@ module EcoBar
     end
 
     def max_index
-      @thermostats[0].max_index
+      @thermostats[0] ?  @thermostats[0].max_index : -1
     end
 
     def mode_menu
@@ -162,14 +160,15 @@ module EcoBar
     private
 
     def load_thermostats
-      @client ||= Ecobee::Client.new(token: @token)
-#      thermostats = [Ecobee::Thermostat.new(client: @client, fake_max_index: 1)]
-#      thermostats << Ecobee::Thermostat.new(client: @client, fake_index: 1, fake_max_index: 1)
-      thermostats = [Ecobee::Thermostat.new(client: @client)]
+#      thermostats = [Ecobee::Thermostat.new(token: @token, fake_max_index: 1)]
+#      thermostats << Ecobee::Thermostat.new(token: @token, fake_index: 1, fake_max_index: 1)
+      thermostats = [Ecobee::Thermostat.new(token: @token)]
       (1..thermostats[0].max_index).each do |index|
-        thermostats[index] = Ecobee::Thermostat.new(client: @client, index: index)
+        thermostats[index] = Ecobee::Thermostat.new(index: index, token: @token)
       end
       thermostats
     end
+
   end
+
 end
