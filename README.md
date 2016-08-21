@@ -23,6 +23,10 @@ Install as a BitBar Plugin (Advanced):
 - Rename the plugin to something like `ecobar.1m.rb` for a 1 minute refresh rate.
 - See [BitBar documentation](https://github.com/matryer/bitbar/blob/master/README.md) for details on customizing BitBar plugins
 
+Known issues:
+- When multiple Macs are running this, and one goes to sleep and wakes up, there can be refresh token collisions resulting in re-registration being required (being addressed)
+
 TODO:
+- rewriting file load/save logic for better cloud awareness, to avoid token collisions
 - Update registration process for instant refresh
 - Add more control/display features
