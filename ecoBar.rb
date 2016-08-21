@@ -48,15 +48,24 @@ config_save = lambda do |config|
   config
 end
 
-@token = Ecobee::Token.new(
-  app_key: EcoBar::APP_KEY,
-  callbacks: {
-    load: config_load,
-    save: config_save,
-  },
-  log_file: (File.exist?('/tmp/enable_ecobar_logging') ? '/tmp/ecobar.log' : nil),
-  scope: :smartWrite
-)
+@token = nil
+begin
+  @token = Ecobee::Token.new(
+    app_key: EcoBar::APP_KEY,
+    callbacks: {
+      load: config_load,
+      save: config_save,
+    },
+    log_file: (File.exist?('/tmp/enable_ecobar_logging') ? '/tmp/ecobar.log' : nil),
+    scope: :smartWrite
+  )
+rescue Ecobee::HTTPError
+  ecobar = EcoBar::BarIO.new(thermostats: [])
+  puts "|dropdown=false templateImage=#{EcoBar::Icons::MENU_30}"
+  puts '---'
+  puts "Ecobee service is unreachable | #{ecobar.color(:hot)}"
+  xit
+end
 
 if @token.pin
   ecobar = EcoBar::BarIO.new(thermostats: [])
