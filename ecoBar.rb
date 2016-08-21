@@ -64,7 +64,7 @@ rescue Ecobee::HTTPError
   puts "|dropdown=false templateImage=#{EcoBar::Icons::MENU_30}"
   puts '---'
   puts "Ecobee service is unreachable | #{ecobar.color(:hot)}"
-  xit
+  exit
 end
 
 if @token.pin
