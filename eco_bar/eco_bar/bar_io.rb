@@ -2,8 +2,6 @@ module EcoBar
 
   require 'fileutils'
 
-  ECOBEE_URL = 'https://www.ecobee.com/consumerportal/index.html'
-
   class BarIO
     attr_accessor :index
     attr_reader :max_index, :thermostats
@@ -23,12 +21,12 @@ module EcoBar
     end
 
     def about
-      render("ecoBar v#{EcoBar::VERSION}", color: :dark, href: EcoBar::HOMEPAGE)
+      render("ecoBar v#{VERSION}", color: :dark, href: GITHUB_URL)
 
       render('Update Available',
              color: :hot,
              param1: 'update',
-             run_self: true) unless EcoBar::AutoUpdate.new.up_to_date?
+             run_self: true) unless AutoUpdate.new.up_to_date?
     end
 
     def check_for_sfmono
@@ -55,16 +53,7 @@ module EcoBar
     end
 
     def color(type)
-      'color=' + case type
-                 when :hot
-                   dark_mode ? '#ff1010': '#c00000'
-                 when :cold
-                   dark_mode ? '#1010ff' : '#0000c0'
-                 when :dark
-                   dark_mode ? '#ffffff' : '#000000'
-                 when :light
-                   dark_mode ? '#404040' : '#707070'
-                 end
+      "color=#{COLOR[type][dark_mode]}"
     end
 
     def dark_mode

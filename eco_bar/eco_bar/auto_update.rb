@@ -10,7 +10,7 @@ module EcoBar
       else
         @remote_version = nil
       end
-      @local_version = Gem::Version.new(EcoBar::DMG_VERSION)
+      @local_version = Gem::Version.new(DMG_VERSION)
     end
 
     def up_to_date?
@@ -30,7 +30,7 @@ module EcoBar
 
     private
 
-    def download_dmg(source: EcoBar::DMG_URL, dest: nil)
+    def download_dmg(source: GITHUB_DMG_URL, dest: nil)
       File.write(dest, open(source).read)
     end
 
