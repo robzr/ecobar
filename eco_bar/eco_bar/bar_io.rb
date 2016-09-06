@@ -22,11 +22,21 @@ module EcoBar
 
     def about
       render("ecoBar v#{VERSION}", color: :dark, href: GITHUB_URL)
-
       render('Update Available',
              color: :hot,
              param1: 'update',
              run_self: true) unless AutoUpdate.new.up_to_date?
+    end
+
+    def alerts
+      return unless thermostat[:alerts].length > 0
+      render("#{thermostat[:alerts].length} Alerts Present", color: :hot)
+      thermostat[:alerts].each do |alert|
+        render("--#{alert[:date]} #{alert[:time]} #{alert[:text]}",
+               color: :hot,
+               param1: "acknowledge=#{alert[:acknowledgeRef]}",
+               run_self: true)
+      end
     end
 
     def check_for_sfmono
@@ -61,7 +71,7 @@ module EcoBar
     end
 
     def fan_mode
-      render("Fan Mode (#{Ecobee::FanMode(thermostat.desired_fan_mode)})",
+      render("Fan Mode: #{Ecobee::FanMode(thermostat.desired_fan_mode)}",
              color: :dark)
       Ecobee::FAN_MODES.each do |mode|
         if mode == thermostat.desired_fan_mode
@@ -84,7 +94,7 @@ module EcoBar
     end
 
     def mode_menu
-      render "Mode (#{Ecobee::Mode(thermostat.mode)})"
+      render "Mode: #{Ecobee::Mode(thermostat.mode)}"
       Ecobee::HVAC_MODES.each do |mode|
         if mode == thermostat.mode
           render("--#{check true}#{Ecobee::Mode(mode)}", color: :dark)
@@ -194,11 +204,29 @@ module EcoBar
     end
 
     def status
-      render("Status (#{thermostat[:equipmentStatus]})", color: :dark)
+      status = thermostat[:equipmentStatus]
+      status = 'none' if status == ''
+      render("Status: #{status}", color: :dark)
     end
 
     def thermostat
       @thermostats[@index]
+    end
+
+    def weather
+      forecast = thermostat[:weather][:forecasts][0]
+      unit_temp = thermostat.unitize(forecast[:temperature])
+      render("Weather: #{unit_temp}#{DEG} #{forecast[:relativeHumidity]}%",
+            href: "https://www.wunderground.com/cgi-bin/findweather/" +
+                  "getForecast?query=#{thermostat[:location][:mapCoordinates]}")
+      render("--#{forecast[:condition]}", color: :dark)
+      render("--Low temp of #{thermostat.unitize(forecast[:tempLow])}#{DEG}",
+             color: :dark)
+      render("--High temp of #{thermostat.unitize(forecast[:tempHigh])}#{DEG}",
+             color: :dark)
+      render("--Wind blowing #{forecast[:windDirection]} at " +
+             "#{forecast[:windSpeed] / 1000} mph", 
+             color: :dark)
     end
 
     def website

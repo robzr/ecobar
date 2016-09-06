@@ -86,13 +86,9 @@ end
 ecobar = EcoBar::BarIO.new(index: @config['index'], token: @token)
 
 case arg
+when /^acknowledge=/
+  ecobar.thermostat.acknowledge(ack_ref: arg.sub(/^.*=/, ''))
 when /^dump/
-  if ecobar.thermostat.celsius?
-    puts "Celsius"
-  else
-    puts "Farenheit"
-  end
-  exit
   puts ecobar.thermostat.dump
 #  pp(ecobar.thermostat[:events]
 #       .select do |event|
@@ -112,12 +108,14 @@ when /^set_fan_mode=/
 else
   ecobar.header
   ecobar.setpoint_menu
+  ecobar.weather
   ecobar.separator
   ecobar.name_menu
   ecobar.status
   ecobar.mode_menu
   ecobar.fan_mode
   ecobar.sensors
+  ecobar.alerts
   ecobar.separator
   ecobar.website
   ecobar.separator
