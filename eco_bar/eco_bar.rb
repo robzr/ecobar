@@ -5,13 +5,18 @@ require_relative 'eco_bar/version.rb'
 
 module EcoBar
   APP_KEY = 'MKDvfwwyGib0ZFhUdgKP4wDIRzYooM1o'
-  COLOR = {
+  COLOR = Hash.new({ true => '#ffffff', false => '#000000' }).merge({
     cold:  { true => '#1010ff', false => '#0000c0' },
-    dark:  { true => '#ffffff', false => '#000000' }, 
     hot:   { true => '#ff1010', false => '#c00000' },
     light: { true => '#404040', false => '#707070' }
-  }
+  }).freeze
 
+#  COLOR = {
+#    cold:  { true => '#1010ff', false => '#0000c0' },
+#    dark:  { true => '#ffffff', false => '#000000' }, 
+#    hot:   { true => '#ff1010', false => '#c00000' },
+#    light: { true => '#404040', false => '#707070' }
+#  }
 
   ECOBEE_URL = 'https://www.ecobee.com/consumerportal/index.html'
 

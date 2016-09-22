@@ -21,7 +21,7 @@ module EcoBar
     end
 
     def about
-      render("ecoBar v#{VERSION}", color: :dark, href: GITHUB_URL)
+      render("ecoBar v#{VERSION}", href: GITHUB_URL)
       render('Update Available',
              color: :hot,
              param1: 'update',
@@ -71,14 +71,12 @@ module EcoBar
     end
 
     def fan_mode
-      render("Fan Mode: #{Ecobee::FanMode(thermostat.desired_fan_mode)}",
-             color: :dark)
+      render "Fan Mode: #{Ecobee::FanMode(thermostat.desired_fan_mode)}"
       Ecobee::FAN_MODES.each do |mode|
         if mode == thermostat.desired_fan_mode
-          render("--#{check true}#{Ecobee::FanMode(mode)}", color: :dark)
+          render "--#{check true}#{Ecobee::FanMode(mode)}"
         else
           render("--#{check false}#{Ecobee::FanMode(mode)}",
-                 color: :dark,
                  param1: "set_fan_mode=#{mode}",
                  run_self: true)
         end
@@ -97,10 +95,9 @@ module EcoBar
       render "Mode: #{Ecobee::Mode(thermostat.mode)}"
       Ecobee::HVAC_MODES.each do |mode|
         if mode == thermostat.mode
-          render("--#{check true}#{Ecobee::Mode(mode)}", color: :dark)
+          render "--#{check true}#{Ecobee::Mode(mode)}"
         else
           render("--#{check false}#{Ecobee::Mode(mode)}",
-                 color: :dark,
                  param1: "set_mode=#{mode}",
                  run_self: true)
         end
@@ -108,17 +105,15 @@ module EcoBar
     end
 
     def name_menu
-      render("#{thermostat.name} (#{thermostat.model})", color: :dark)
+      render "#{thermostat.name} (#{thermostat.model})"
       if max_index > 0
         @thermostats.each_index do |index|
           thermostat = @thermostats[index]
           
           if @index == index
-            render("--#{check true}#{thermostat.name} (#{thermostat.model})",
-                   color: :dark)
+            render "--#{check true}#{thermostat.name} (#{thermostat.model})"
           else
             render("--#{check false}#{thermostat.name} (#{thermostat.model})",
-                   color: :dark,
                    param1: "set_index=#{index}",
                    run_self: true)
           end
@@ -126,24 +121,23 @@ module EcoBar
       end
     end
 
-    def render(msg, *args)
+    def render(msg, arg = {})
       msg += '|'
-      if (arg = args.shift).is_a? Hash
-        msg += " #{arg[:attrib]}" if arg.key? :attrib
-        msg += " bash=\"#{arg[:bash]}\"" if arg.key? :bash
-        msg += " #{color(arg[:color])}" if arg.key? :color
-        if arg.key? :font
-          msg += " font=#{arg[:font]}"
-        elsif @font
-          msg += " font=#{@font}"
-        end
-        msg += " href=\"#{arg[:href]}\"" if arg.key? :href
-        msg += " #{@base_command}" if arg.key? :run_self
-        msg += " trim=#{arg[:trim] ? 'true' : 'false'}"
-        arg.keys.sort.select do |key| 
-          if key.to_s =~ /^param(\d+)/
-            msg += " param#{$1}=#{arg[key]}"
-          end
+      arg.merge!({:color => :dark}) unless arg[:color]
+      msg += " #{arg[:attrib]}" if arg.key? :attrib
+      msg += " bash=\"#{arg[:bash]}\"" if arg.key? :bash
+      msg += " #{color(arg[:color])}" if arg.key? :color
+      if arg.key? :font
+        msg += " font=#{arg[:font]}"
+      elsif @font
+        msg += " font=#{@font}"
+      end
+      msg += " href=\"#{arg[:href]}\"" if arg.key? :href
+      msg += " #{@base_command}" if arg.key? :run_self
+      msg += " trim=#{arg[:trim] ? 'true' : 'false'}"
+      arg.keys.sort.select do |key| 
+        if key.to_s =~ /^param(\d+)/
+          msg += " param#{$1}=#{arg[key]}"
         end
       end
       puts msg
@@ -158,7 +152,7 @@ module EcoBar
           msg += %Q{ #{thermostat.unitize(val[0][:value])}#{DEG}} if val.length > 0
           val = sensor[:capability].select { |cap| cap[:type] == 'humidity' }
           msg += %Q{ #{val[0][:value].to_i}%} if val.length > 0
-          render(msg, color: :dark)
+          render msg
         end
     end
 
@@ -206,7 +200,7 @@ module EcoBar
     def status
       status = thermostat[:equipmentStatus]
       status = 'none' if status == ''
-      render("Status: #{status}", color: :dark)
+      render "Status: #{status}"
     end
 
     def thermostat
@@ -219,14 +213,11 @@ module EcoBar
       render("Weather: #{unit_temp}#{DEG} #{forecast[:relativeHumidity]}%",
             href: "https://www.wunderground.com/cgi-bin/findweather/" +
                   "getForecast?query=#{thermostat[:location][:mapCoordinates]}")
-      render("--#{forecast[:condition]}", color: :dark)
-      render("--Low temp of #{thermostat.unitize(forecast[:tempLow])}#{DEG}",
-             color: :dark)
-      render("--High temp of #{thermostat.unitize(forecast[:tempHigh])}#{DEG}",
-             color: :dark)
-      render("--Wind blowing #{forecast[:windDirection]} at " +
-             "#{forecast[:windSpeed] / 1000} mph", 
-             color: :dark)
+      render "--#{forecast[:condition]}"
+      render "--Low temp of #{thermostat.unitize(forecast[:tempLow])}#{DEG}"
+      render "--High temp of #{thermostat.unitize(forecast[:tempHigh])}#{DEG}"
+      render "--Wind blowing #{forecast[:windDirection]} at " +
+             "#{forecast[:windSpeed] / 1000} mph"
     end
 
     def website

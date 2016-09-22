@@ -6,7 +6,7 @@ Ecobee BitBar plugin for monitoring and controlling an Ecobee thermostat from yo
   alt="Example output from one line bot" width=344 height=330>
 
 Features:
-- Runs in macOS menu bar, works in regular mode and dark mode
+- Runs in macOS menu bar, optimized for regular mode and dark mode
 - Works with one or more Ecobee thermostats including the excellent ecobee3
 - Allows control of temperature setpoints, fan mode, thermostat mode, readout of sensors
 - Sync's Ecobee API token and settings via iCloud Drive if available
@@ -27,6 +27,6 @@ Known issues:
 - When multiple Macs are running this, and one goes to sleep and wakes up, there can be refresh token collisions resulting in re-registration being required (being addressed)
 
 TODO:
-- rewriting file load/save logic for better cloud awareness, to avoid token collisions
+- Port to BitBar v2 for faster refresh, static menu bar, fewer processes
 - Update registration process for instant refresh
-- Add more control/display features
+- Add more control/display features or customization/preferences
