@@ -19,6 +19,44 @@ require 'pp'
 end
 require_relative 'eco_bar/eco_bar'
 
+# ENV: {"BitBarDarkMode"=>"1", "BitBar"=>"1", "BitBarVersion"=>"2.0.0-beta10"}
+REFRESH = 10
+
+def is_long_running?
+  ENV['BitBarVersion'] =~ /^[2-9]\./ && $0.sub(/.*\//, '').count('.') < 2
+end
+
+def write_single_output(ecobar)
+  ecobar.header
+  ecobar.setpoint_menu
+  ecobar.weather
+  ecobar.separator
+  ecobar.name_menu
+  ecobar.status
+  ecobar.mode_menu
+  ecobar.fan_mode
+  ecobar.sensors
+  ecobar.alerts
+  ecobar.separator
+  ecobar.website
+  ecobar.separator
+  ecobar.about
+end
+
+def write_output(ecobar)
+  if is_long_running?
+    loop do
+      write_single_output(ecobar)
+      puts '~~~'
+      STDOUT.flush
+      sleep REFRESH
+      ecobar = EcoBar::BarIO.new(index: @config['index'], token: @token)
+    end
+  else
+    write_single_output(ecobar)
+  end
+end
+
 case arg = ARGV.shift 
 when /^wipe_tokens/
   begin
@@ -106,18 +144,5 @@ when /^set_heat=/
 when /^set_fan_mode=/
   ecobar.thermostat.desired_fan_mode = arg.sub(/^.*=/, '')
 else
-  ecobar.header
-  ecobar.setpoint_menu
-  ecobar.weather
-  ecobar.separator
-  ecobar.name_menu
-  ecobar.status
-  ecobar.mode_menu
-  ecobar.fan_mode
-  ecobar.sensors
-  ecobar.alerts
-  ecobar.separator
-  ecobar.website
-  ecobar.separator
-  ecobar.about
+  write_output ecobar
 end

@@ -74,9 +74,10 @@ module EcoBar
       render "Fan Mode: #{Ecobee::FanMode(thermostat.desired_fan_mode)}"
       Ecobee::FAN_MODES.each do |mode|
         if mode == thermostat.desired_fan_mode
-          render "--#{check true}#{Ecobee::FanMode(mode)}"
+          render("--#{Ecobee::FanMode(mode)}", checked: true)
         else
-          render("--#{check false}#{Ecobee::FanMode(mode)}",
+          render("--#{Ecobee::FanMode(mode)}",
+                 checked: false,
                  param1: "set_fan_mode=#{mode}",
                  run_self: true)
         end
@@ -95,9 +96,10 @@ module EcoBar
       render "Mode: #{Ecobee::Mode(thermostat.mode)}"
       Ecobee::HVAC_MODES.each do |mode|
         if mode == thermostat.mode
-          render "--#{check true}#{Ecobee::Mode(mode)}"
+          render("--#{Ecobee::Mode(mode)}", checked: true)
         else
-          render("--#{check false}#{Ecobee::Mode(mode)}",
+          render("--#{Ecobee::Mode(mode)}",
+                 checked: false,
                  param1: "set_mode=#{mode}",
                  run_self: true)
         end
@@ -111,9 +113,10 @@ module EcoBar
           thermostat = @thermostats[index]
           
           if @index == index
-            render "--#{check true}#{thermostat.name} (#{thermostat.model})"
+            render("--#{thermostat.name} (#{thermostat.model})", checked: true)
           else
-            render("--#{check false}#{thermostat.name} (#{thermostat.model})",
+            render("--#{thermostat.name} (#{thermostat.model})",
+                   checked: false,
                    param1: "set_index=#{index}",
                    run_self: true)
           end
@@ -124,6 +127,13 @@ module EcoBar
     def render(msg, arg = {})
       msg += '|'
       arg.merge!({:color => :dark}) unless arg[:color]
+      if ENV['BitBarVersion'] =~ /^2\./ && arg[:checked] == true
+        msg += " checked=true"
+      elsif arg[:checked] == true
+        msg.sub!(/^(-*)/, "\\1#{check true}")
+      elsif ENV['BitBarVersion'] =~ /^1\./ && arg[:checked] == false
+        msg.sub!(/^(-*)/, "\\1#{check false}")
+      end
       msg += " #{arg[:attrib]}" if arg.key? :attrib
       msg += " bash=\"#{arg[:bash]}\"" if arg.key? :bash
       msg += " #{color(arg[:color])}" if arg.key? :color
@@ -170,9 +180,10 @@ module EcoBar
     def setpoint_menu_cool
       thermostat.cool_range(with_delta: true).reverse_each do |temp|
         if temp == thermostat.desired_cool
-          render("--#{check true}#{temp}#{DEG}", color: :cold)
+          render("--#{temp}#{DEG}", checked: true, color: :cold)
         else
-          render("--#{check false}#{temp}#{DEG}",
+          render("--#{temp}#{DEG}",
+                 checked: false,
                  color: :cold,
                  param1: "set_cool=#{temp}",
                  run_self: true)
@@ -183,9 +194,10 @@ module EcoBar
     def setpoint_menu_heat
       thermostat.heat_range(with_delta: true).reverse_each do |temp|
         if temp == thermostat.desired_heat
-          render("--#{check true}#{temp}#{DEG}", color: :hot)
+          render("--#{temp}#{DEG}", checked: true, color: :hot)
         else
-          render("--#{check false}#{temp}#{DEG}", 
+          render("--#{temp}#{DEG}", 
+                 checked: false,
                  color: :hot,
                  param1: "set_heat=#{temp}",
                  run_self: true)
